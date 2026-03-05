@@ -44,36 +44,44 @@ pipeline {
    
     post {
 
-        success {
-            mail(
-                subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                Build completed successfully.
+	    success {
+       		 emailext(
+	            to: "${env.EMAIL}",
+        	    subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+	            mimeType: 'text/html',
+        	    body: """
+			<h3 style="color:green;">Build Successful</h3>
 
-                Job: ${env.JOB_NAME}
-                Build Number: ${env.BUILD_NUMBER}
+			<b>Job:</b> ${env.JOB_NAME}<br>
+			<b>Build:</b> ${env.BUILD_NUMBER}<br>
+			<b>Branch:</b> ${env.GIT_BRANCH}<br>
 
-                View build details:
-                ${env.BUILD_URL}
-                """,
-                to: "${env.EMAIL}"
-            )
-        }
+			<br>
+			<b>Results:</b><br>
+			<a href="${env.BUILD_URL}">${env.BUILD_URL}</a>
+			""",
+		    attachLog: true
+       		 )
+    	    }
 
-        failure {
-            mail(
-                subject: "Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                The CI/CD pipeline failed.
+	    failure {
+        	emailext(
+         	    to: "${env.EMAIL}",
+	            subject: "Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        	    mimeType: 'text/html',
+	            body: """
+			<h3 style="color:red;">Build Failed</h3>
 
-                Job: ${env.JOB_NAME}
-                Build Number: ${env.BUILD_NUMBER}
- 
-                Check the full logs here:
-                ${env.BUILD_URL}
-                """,
-                to: "${env.EMAIL}"
-            )
-        }
-    }
+			<b>Job:</b> ${env.JOB_NAME}<br>
+			<b>Build:</b> ${env.BUILD_NUMBER}<br>
+			<b>Branch:</b> ${env.GIT_BRANCH}<br>
+
+			<br>
+			<b>Check logs:</b><br>
+			<a href="${env.BUILD_URL}console">${env.BUILD_URL}console</a>
+			""",
+	            attachLog: true
+       		 )
+	   }
+	}
 }
