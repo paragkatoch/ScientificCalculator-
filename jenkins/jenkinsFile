@@ -4,7 +4,6 @@ pipeline {
 
     environment {
         IMAGE_NAME = "paragkatoch/calculator:latest"
-        BUILD_CONTAINER = "build"
         EMAIL = "paragkatoch@gmail.com"
     }
 
@@ -13,42 +12,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Create Build Container') {
-            steps {
-                sh '''
-                docker run -dit \
-                --name $BUILD_CONTAINER \
-                maven:3.9-eclipse-temurin-17 bash
-                '''
-            }
-        }
-
-        stage('Copy Project Into Container') {
-            steps {
-                sh '''
-                docker cp . $BUILD_CONTAINER:/project
-                '''
-            }
-        }
-
-        stage('Build Project') {
-            steps {
-                sh '''
-                docker exec $BUILD_CONTAINER \
-                bash -c "cd /project && mvn clean package"
-                '''
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh '''
-                docker exec $BUILD_CONTAINER \
-                bash -c "cd /project && mvn test"
-                '''
             }
         }
 
