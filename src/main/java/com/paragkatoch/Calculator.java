@@ -42,12 +42,17 @@ public class Calculator {
             System.out.println("3. Natural Log");
             System.out.println("4. Power");
             System.out.println("5. Exit");
+            System.out.println("0. Repeat");
             System.out.print("Choose option: ");
 
             int choice = scanner.nextInt();
 
             try {
                 switch (choice) {
+                    case 0:
+                       System.out.print("");
+                       break;
+
                     case 1:
                         System.out.print("Enter number: ");
                         double num = scanner.nextDouble();
