@@ -5,6 +5,7 @@ pipeline {
     environment {
         IMAGE_NAME = "paragkatoch/calculator:latest"
         BUILD_CONTAINER = "build"
+        EMAIL = "paragkatoch@gmail.com"
     }
 
     stages {
@@ -80,12 +81,40 @@ pipeline {
    
     post {
 
+        always {
+            sh "docker rm -f $BUILD_CONTAINER || true"
+        }
+
         success {
-            sh 'docker rm -f $BUILD_CONTAINER || true'
+            mail(
+                subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                Build completed successfully.
+
+                Job: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+
+                View build details:
+                ${env.BUILD_URL}
+                """,
+                to: "${env.EMAIL}"
+            )
         }
 
         failure {
-            sh 'docker rm -f $BUILD_CONTAINER || true'
+            mail(
+                subject: "Build FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                The CI/CD pipeline failed.
+
+                Job: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+ 
+                Check the full logs here:
+                ${env.BUILD_URL}
+                """,
+                to: "${env.EMAIL}"
+            )
         }
     }
 }
