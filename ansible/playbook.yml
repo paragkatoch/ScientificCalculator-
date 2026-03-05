@@ -1,0 +1,15 @@
+---
+- name: Deploy Calculator Container
+  hosts: appserver
+
+  tasks:
+
+    - name: Pull latest Docker image
+      command: docker pull paragkatoch/calculator:latest
+
+    - name: Stop and remove old container
+      command: docker rm -f calculator-container
+      ignore_errors: yes
+
+    - name: Run new container
+      command: docker run -dit --name calculator-container paragkatoch/calculator:latest

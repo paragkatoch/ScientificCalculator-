@@ -58,6 +58,24 @@ pipeline {
                 '''
             }
         }
+
+        stage('Push Image to DockerHub') {
+            steps {
+                script {
+                     docker.withRegistry('', 'DockerHubCred') {
+                         sh "docker push $IMAGE_NAME"
+                     }
+                }
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                sh '''
+                ansible-playbook ansible/playbook.yml -i ansible/inventory
+                '''
+            }
+        }
     }
    
     post {
