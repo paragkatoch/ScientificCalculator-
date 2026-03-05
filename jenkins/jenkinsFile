@@ -44,10 +44,6 @@ pipeline {
    
     post {
 
-        always {
-            sh "docker rm -f $BUILD_CONTAINER || true"
-        }
-
         success {
             mail(
                 subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
