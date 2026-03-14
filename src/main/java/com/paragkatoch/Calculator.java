@@ -29,7 +29,8 @@ public class Calculator {
     }
 
     public static double power(double base, double exponent) {
-        return Math.pow(base, exponent);
+        return 1.0;
+       // return Math.pow(base, exponent);
     }
 
     public static void main(String[] args) {
