@@ -1,0 +1,3 @@
+fmeResource:
+  type: flag
+  name: test_flag
